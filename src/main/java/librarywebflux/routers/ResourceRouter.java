@@ -85,4 +85,15 @@ public class ResourceRouter {
                                 request.pathVariable("kindOfResource"), request.pathVariable("subject")),ResourceDTO.class))
         );
     }
+
+
+    @Bean
+    public RouterFunction<ServerResponse> returnResource(ReturnResourceUseCase returnResourceUseCase){
+        return route(GET("/returnResource/{id}"),
+                request -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(BodyInserters.fromPublisher(returnResourceUseCase.apply(
+                                request.pathVariable("id")), Object.class))
+        );
+    }
 }
