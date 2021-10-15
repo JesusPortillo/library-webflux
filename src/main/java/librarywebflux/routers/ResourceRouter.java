@@ -1,11 +1,7 @@
 package librarywebflux.routers;
 
-import librarywebflux.collections.Resource;
 import librarywebflux.model.ResourceDTO;
-import librarywebflux.usecases.CheckAvailabilityUseCase;
-import librarywebflux.usecases.FindResourceUseCase;
-import librarywebflux.usecases.GetAllUseCase;
-import librarywebflux.usecases.LendResourceUseCase;
+import librarywebflux.usecases.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -57,6 +53,36 @@ public class ResourceRouter {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(BodyInserters.fromPublisher(checkAvailabilityUseCase.apply(
                                 request.pathVariable("id")),String.class))
+        );
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> recommendByKindOfResource(RecommendByKindOfResourceUseCase recommendByKindOfResourceUseCase){
+        return route(GET("/recommendByKindOfResource/{kindOfResource}"),
+                request -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(BodyInserters.fromPublisher(recommendByKindOfResourceUseCase.apply(
+                                request.pathVariable("kindOfResource")),ResourceDTO.class))
+                );
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> recommendBySubject(RecommendBySubjectUseCase recommendBySubject){
+        return route(GET("/recommendBySubject/{subject}"),
+                request -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(BodyInserters.fromPublisher(recommendBySubject.apply(
+                                request.pathVariable("subject")),ResourceDTO.class))
+        );
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> recommendByKindOfResourceAndSubject(RecommendByKindOfResourceAndSubjectUseCase recommendByKindOfResourceAndSubjectUseCase){
+        return route(GET("/recommendByKindOfResourceAndSubject/{kindOfResource}/{subject}"),
+                request -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(BodyInserters.fromPublisher(recommendByKindOfResourceAndSubjectUseCase.apply(
+                                request.pathVariable("kindOfResource"), request.pathVariable("subject")),ResourceDTO.class))
         );
     }
 }
