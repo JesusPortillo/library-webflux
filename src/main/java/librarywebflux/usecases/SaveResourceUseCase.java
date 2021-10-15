@@ -20,7 +20,9 @@ public class SaveResourceUseCase implements SaveResourceInterface{
 
 
     @Override
-    public Mono<String> apply(ResourceDTO resourceDTO) {
-        return resourceRepository.save(resourceMappper.convertToModel(resourceDTO));
+    public Mono<ResourceDTO> apply(ResourceDTO resourceDTO) {
+        return resourceRepository.save(resourceMappper.convertToModel(resourceDTO)).thenReturn(resourceDTO);
     }
+
+
 }
